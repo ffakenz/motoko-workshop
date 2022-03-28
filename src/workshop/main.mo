@@ -3,37 +3,18 @@ import Nat "mo:base/Nat";
 import Bool "mo:base/Bool";
 import List "mo:base/List";
 import Option "mo:base/Option";
+import Actor "actor";
 
 actor Program {
-    // start:modules
-    type Command = {
-        #initCommand: { value: Nat };
-    };
-
-    type Event = {
-        #initEvent: { value: Nat };
-    };
-
-    public type State<A> = {
-        value: A;
-        events: List.List<Event>;
-    };
-    
-    public type StateOps<A> = {
-        check: (Command, State<A>) -> Bool; // check commands
-        apply: (Event, State<A>) -> State<A>; // apply events
-    };
-    // end:modules
-
     // start:private
-    private stable var state: State<Nat> = { 
+    private stable var state: Actor.State<Nat> = { 
         value = 0;
         events = null;
     };
     
      // @TODO
-    private var stateOps: StateOps<Nat> = {
-        check = func(cmd: Command, state: State<Nat>): Bool { 
+    private var stateOps: Actor.StateOps<Nat> = {
+        check = func(cmd: Actor.Command, state: Actor.State<Nat>): Bool { 
             Debug.print "cmd check";
             return switch cmd {
                 case (#initCommand({value: Nat})) {
@@ -46,9 +27,9 @@ actor Program {
                 }
             };
         };
-        apply = func(evt: Event, state: State<Nat>): State<Nat> { 
+        apply = func(evt: Actor.Event, state: Actor.State<Nat>): Actor.State<Nat> { 
             Debug.print "evt apply";
-            let st: State<Nat> = switch evt {
+            let st: Actor.State<Nat> = switch evt {
               case (#initEvent({value: Nat})) {
                 { 
                   value = value;
@@ -63,7 +44,7 @@ actor Program {
 
     // start:public
     // dfx canister call workshop action "(variant { initCommand = record { value = 0 } } )"
-    public func action(cmd: Command): async ?State<Nat> {
+    public func action(cmd: Actor.Command): async ?Actor.State<Nat> {
         if (not stateOps.check(cmd, state)) {
             return null;
         };
