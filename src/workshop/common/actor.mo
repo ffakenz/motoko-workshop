@@ -5,10 +5,18 @@ module Actor {
       value: S;
       events: List.List<E>;
   };
+
+  public func pure<S, E>(value: S): State<S, E> {
+    return {
+      value = value;
+      events = List.nil();
+    };
+  };
   
   public type StateOps<S, E, C> = {
-      init: () -> State<S, E>;
-      check: (C, State<S, E>) -> Bool; // check commands
-      apply: (E, State<S, E>) -> State<S, E>; // apply events
+      init: S -> State<S, E>;
+      check: (State<S, E>, C) -> Bool; // check commands
+      apply: (State<S, E>, E) -> State<S, E>; // apply events
+      applyAll: (State<S, E>, List.List<E>) -> State<S, E>; // apply events
   };
 };

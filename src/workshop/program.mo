@@ -1,54 +1,69 @@
 import Actor "./common/actor";
 import List "mo:base/List";
+import Nat "mo:base/Nat";
 import Debug "mo:base/Debug";
 
 module Program {
+  public type Entity = Nat;
+
   public type Command = {
-      #initCommand: {value: Nat};
+      #initCommand: {value: Entity};
   };
 
   public type Event = {
-      #initEvent: {value: Nat};
+      #initEvent: {value: Entity};
   };
 
-  private func init(): Actor.State<Nat, Event> {
-    return {
-      value = 0;
-      events = null;
-    }
+  // start:private
+  public func _init(value: Entity): Actor.State<Entity, Event> {
+    return Actor.pure(value);
   };
 
-  private func check(cmd: Command, state: Actor.State<Nat, Event>): Bool { 
+  private func _check(state: Actor.State<Entity, Event>, cmd: Command): Bool { 
     Debug.print "cmd check";
     return 
       switch cmd {
-        case (#initCommand({value: Nat})) {
-          if(value > state.value) {
-            false;
-          }
-          else {
-            true;
-          }
+        case (#initCommand({value: Entity})) {
+          return value > state.value; // business logic
         }
       };
   };
 
-  private func apply(evt: Event, state: Actor.State<Nat, Event>): Actor.State<Nat, Event> { 
+  private func _apply(state: Actor.State<Entity, Event>, evt: Event): Actor.State<Entity, Event> { 
     Debug.print "evt apply";
-    let st: Actor.State<Nat, Event> = switch evt {
-      case (#initEvent({value: Nat})) {
-        { 
-          value = value;
+    return switch evt {
+      case (#initEvent({value: Entity})) {
+        let _state: Actor.State<Entity, Event> = {
+          value = state.value + value; // bussiness logic
           events = List.push(evt, state.events);
         };
+        return _state;
       };
     };
-    return st;
   };
-  
-  public let stateOps: Actor.StateOps<Nat, Event, Command> = {
-    init = init;
-    check = check;
-    apply = apply;
+
+  private func _applyAll(state: Actor.State<Entity, Event>, evts: List.List<Event>): Actor.State<Entity, Event> { 
+    Debug.print "evts applyAll";
+    return List.foldLeft(evts, state, _apply);
   };
+  // end:private
+
+  // start:public
+  public let state: Actor.StateOps<Entity, Event, Command> = {
+    init = _init;
+    check = _check;
+    apply = _apply;
+    applyAll = _applyAll;
+  };
+
+  public func commandEvents(cmd: Command): List.List<Event> {
+    return switch cmd {
+      case (#initCommand({value: Entity})) {
+        let event = #initEvent({value = value + 1}); // business logic
+        let events = List.push(event, List.nil());
+        return events;
+      };
+    };
+  };
+  // end:public
 };
