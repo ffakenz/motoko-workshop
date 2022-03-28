@@ -4,7 +4,7 @@ import Nat "mo:base/Nat";
 import Debug "mo:base/Debug";
 
 module Program {
-  public type Entity = Nat;
+  public type Entity = Nat; // business logic
 
   public type Command = {
       #initCommand: {value: Entity};
@@ -21,12 +21,11 @@ module Program {
 
   private func _check(state: Actor.State<Entity, Event>, cmd: Command): Bool { 
     Debug.print "cmd check";
-    return 
-      switch cmd {
-        case (#initCommand({value: Entity})) {
-          return value > state.value; // business logic
-        }
-      };
+    return switch cmd {
+      case (#initCommand({value: Entity})) {
+        return value > state.value; // business logic
+      }
+    };
   };
 
   private func _apply(state: Actor.State<Entity, Event>, evt: Event): Actor.State<Entity, Event> { 
