@@ -16,7 +16,7 @@ actor class Chat(
   type List<A> = List.List<A>;
     
   var messages : List<Types.Message> = List.nil();
-  var members : TrieMap<Text,Types.MemberRef> = TrieMap.fromEntries(Iter.fromList(List.nil()), Text.equal, Text.hash);
+  var members : TrieMap<Principal,Types.MemberRef> = TrieMap.fromEntries(Iter.fromList(List.nil()), Text.equal, Text.hash);
 
   public func addMember(memberId : Types.MemberId, memberRef: Types.MemberRef): async () {
     Debug.print("[Chat][addMember]: " # memberId.id);

@@ -8,11 +8,12 @@ import Text "mo:base/Text";
 import TrieMap "mo:base/TrieMap";
 import Debug "mo:base/Debug";
 import Principal "mo:base/Principal";
+import Sharding "../common/Sharding"
 
 actor Main {
 
-  var users : TrieMap.TrieMap<Text,Types.MemberRef> = TrieMap.fromEntries(Iter.fromList(List.nil()), Text.equal, Text.hash);
-  var chatRooms : TrieMap.TrieMap<Text,Types.ChatRef> = TrieMap.fromEntries(Iter.fromList(List.nil()), Text.equal, Text.hash);
+  var users : TrieMap.TrieMap<Principal,Types.MemberRef> = TrieMap.fromEntries(Iter.fromList(List.nil()), Principal.equal, Principal.hash);
+  var chatRooms : TrieMap.TrieMap<Principal,Types.ChatRef> = TrieMap.fromEntries(Iter.fromList(List.nil()), Principal.equal, Principal.hash);
 
   public func createUser(memberId: Types.MemberId): async () {
     Debug.print("[Main][createUser]: memberId: " # memberId.id);
