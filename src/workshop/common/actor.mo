@@ -1,14 +1,14 @@
 import List "mo:base/List";
 
-module Actor {  
+module Actor {
   public type State<S, E> = {
-      value: S;
+      entity: S;
       events: List.List<E>;
   };
 
-  public func pure<S, E>(value: S): State<S, E> {
+  public func initState<S, E>(entity: S): State<S, E> {
     return {
-      value = value;
+      entity = entity;
       events = List.nil();
     };
   };

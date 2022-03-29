@@ -15,15 +15,16 @@ module Program {
   };
 
   // start:private
-  public func _init(value: Entity): Actor.State<Entity, Event> {
-    return Actor.pure(value);
+  public func _init(entity: Entity): Actor.State<Entity, Event> {
+    Debug.print "init";
+    return Actor.initState(entity);
   };
 
   private func _check(state: Actor.State<Entity, Event>, cmd: Command): Bool { 
     Debug.print "cmd check";
     return switch cmd {
       case (#initCommand({value: Entity})) {
-        return value > state.value; // business logic
+        return value > state.entity; // business logic
       }
     };
   };
@@ -33,7 +34,7 @@ module Program {
     return switch evt {
       case (#initEvent({value: Entity})) {
         let _state: Actor.State<Entity, Event> = {
-          value = state.value + value; // bussiness logic
+          entity = state.entity + value; // bussiness logic
           events = List.push(evt, state.events);
         };
         return _state;
