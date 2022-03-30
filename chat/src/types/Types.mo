@@ -17,14 +17,15 @@ module Types {
 
      public type ChatRef = actor {
         sendMessage: Message -> async ();
-        addMember: (Types.MemberId, Types.MemberRef) -> async (); 
+        addMember: (Member, MemberRef) -> async (); 
         getMembers: query () -> async [Principal];
-        getMessages: query () -> async [Types.Message];
+        getMessages: query () -> async [Message];
     };
     public type MemberRef = actor {
         receiveMessage: Message -> async ();
-        addChatId: ChatId -> async (); 
-        getChats: query () -> async [Principal];
+        addChat: Chat -> async (); 
+        getVersion: query () -> async Text;
+        getChats: query () -> async [Chat];
     };
     
 
