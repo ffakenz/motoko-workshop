@@ -27,7 +27,7 @@ actor Main {
   // User.createUser
   public func createUser(name: Text): async User {
     let ref = await User.User(name);
-    let principal = Principal.fromActor(ref);
+    let principal = Principal.fromActor(ref); // TODO, why send the ref to the ActorRepositoryModule? Maybe just send the Principal 
     Debug.print("[Main][createUser]: memberPrincipal: " # Principal.toText(principal));
     return users.create(name, (principal, ref));
   };

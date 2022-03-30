@@ -22,6 +22,11 @@ actor class User(
       chats := Array.append<Types.Chat>(chats, [chat]);
   };
 
+
+  public shared query func getVersion() : async Text {
+    return "v1"
+  };
+
   public shared query func getChats() : async [Types.Chat] {
     return chats
   };
