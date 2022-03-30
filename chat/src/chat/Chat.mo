@@ -7,8 +7,8 @@ import Debug "mo:base/Debug";
 import Text "mo:base/Text";
 
 actor class Chat(
-  id: Types.ChatId,
-  owner: Types.MemberId 
+  id: Types.Chat,
+  owner: Types.Member
 ) {
 
 
@@ -18,21 +18,21 @@ actor class Chat(
   var messages : List<Types.Message> = List.nil();
   var members : TrieMap<Text,Types.MemberRef> = TrieMap.fromEntries(Iter.fromList(List.nil()), Text.equal, Text.hash);
 
-  public func addMember(memberId : Types.MemberId, memberRef: Types.MemberRef): async () {
-    Debug.print("[Chat][addMember]: " # memberId.id);
-    await memberRef.addChatId(id);
-    members.put(memberId.id, memberRef);
+  public func addMember(member : Text, memberRef: Types.MemberRef): async () {
+    Debug.print("[Chat][addMember]: " # member);
+    await memberRef.addChat(id);
+    members.put(member, memberRef);
   };
 
   public func sendMessage(message : Types.Message) {
-      Debug.print("[Chat][sendMessage]: message.from: " # message.from);
+      Debug.print("[Chat][sendMessage]: message.from: " # message.from.name);
       Debug.print("[Chat][sendMessage]: message.content: " # message.content);
       for (member in members.keys()) {
-        if (message.from == member) {
+        if (message.from.name == member) {
           Debug.print("[Chat][sendMessage].b: Member is valid: " # member);
           messages := List.push(message, messages); //RBAC
           for (receiver in members.entries()) {
-            if (message.from != receiver.0) {
+            if (message.from.name != receiver.0) {
               Debug.print("[Chat][sendMessage].b: Sending message to " # receiver.0);
               await receiver.1.receiveMessage(message);
             };
