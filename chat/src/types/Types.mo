@@ -1,17 +1,17 @@
 import Principal "mo:base/Principal";
 
 module Types {
-    
-    public type ChatId = {
-        id: Principal;
+
+    public type Chat = {
+        name : Text;
     };
 
-    public type MemberId = {
-        id : Principal;
+    public type Member = {
+        name : Text;
     };
 
     public type Message = {
-        from: Principal;
+        from: Member;
         content : Text;
     };
 

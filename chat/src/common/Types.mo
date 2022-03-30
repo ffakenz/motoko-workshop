@@ -1,12 +1,15 @@
-import TrieMap "mo:base/TrieMap";
-import Principal "mo:base/Principal";
-import Iter "mo:base/Iter";
-import List "mo:base/List";
-import Text "mo:base/Text";
-import User "../user/User";
-import ActorMapClass "./Sharding";
 
+module Types {
 
-type Builder<A> = {
-    build: () -> A
+    public type Other<A, Then> = {
+        iPromiseToUseYourCallback: Callback<A, Then> -> Then
+    };
+
+    public type Callback<A, Then> = {
+      callback: A -> Then
+    };
+
+    public type Builder<A> = {
+        build: () -> A
+    }
 }

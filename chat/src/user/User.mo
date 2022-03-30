@@ -6,23 +6,23 @@ import Principal "mo:base/Principal";
 
 
 actor class User(
-  id : Types.MemberId
+  name: Text
 ) {
 
-  var chats : [Types.ChatId] = [];
+  var chats : [Types.Chat] = [];
 
   public func receiveMessage(message: Types.Message): async () { // member interface
-      Debug.print("[User][receiveMessage]: message.from: " # Principal.toText(message.from));
+      Debug.print("[User][receiveMessage]: message.from: " # message.from.name);
       Debug.print("[User][receiveMessage]: message.content: " # message.content);
   };
   
 
-  public func addChatId(chatId: Types.ChatId): async () { // member interface
-      Debug.print("[User][addChatRef]: " # Principal.toText(chatId.id));
-      chats := Array.append<Types.ChatId>(chats, [chatId]);
+  public func addChat(chat: Types.Chat): async () { // member interface
+      Debug.print("[User][addChatRef]: " # name);
+      chats := Array.append<Types.Chat>(chats, [chat]);
   };
 
-  public shared query func getChats() : async [Types.ChatId] {
+  public shared query func getChats() : async [Types.Chat] {
     return chats
   };
 
