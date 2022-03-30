@@ -1,5 +1,4 @@
 
-
 module Types {
 
     public type Other<A, Then> = {
